@@ -43,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButton("Jump") && readyToJump && grounded)
         {
-            Debug.Log("trying to jump");
             readyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
