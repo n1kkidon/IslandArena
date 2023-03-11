@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody body;
     [SerializeField] float Movement_speed = 3;
     [SerializeField] float Jump_power = 3;
+    [SerializeField] Transform groundedCheck;
+    [SerializeField] LayerMask ground;
     void Start()
     {
         body = GetComponent<Rigidbody>();
@@ -16,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Jump"))
+        if(Input.GetButtonDown("Jump") && isGrounded())
             body.AddForce(new Vector3(0, Jump_power, 0), ForceMode.VelocityChange);
 
         var horizontal = Input.GetAxis("Horizontal");
@@ -25,4 +27,6 @@ public class PlayerMovement : MonoBehaviour
         body.velocity = new Vector3(horizontal * Movement_speed, body.velocity.y, vertical * Movement_speed);
 
     }
+
+    bool isGrounded() => Physics.CheckSphere(groundedCheck.position, 0.1f, ground);
 }
