@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
+
 public class Enemy : MonoBehaviour
 {
 
@@ -19,9 +21,12 @@ public class Enemy : MonoBehaviour
     public float sightRange, attackRange;
     bool playerInSightRange, playerInAttackRange;
     public float attackDamage = 20;
+    public float tetherRange = 0.5f;
 
     PlayerHealth playerHealth;
-    public float health;
+    public float maxHealth = 250f;
+    float currentHealth;
+    public Slider healthBar;
 
     private void Awake()
     {
@@ -34,8 +39,11 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        currentHealth = maxHealth;
+        healthBar.value = CalculateHealth();
     }
+
+    private float CalculateHealth() => currentHealth / maxHealth;
 
     private void OnDrawGizmosSelected()
     {
@@ -74,7 +82,7 @@ public class Enemy : MonoBehaviour
 
     private void AttackPlayer()
     {
-        if((transform.position - player.position).magnitude < 0.5f) //melee
+        if((transform.position - player.position).magnitude < tetherRange) 
             agent.SetDestination(transform.position);
         else agent.SetDestination(player.position);
         transform.LookAt(player);
@@ -89,9 +97,10 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        health -= damage;
-        if (health <= 0)
-            Invoke(nameof(DestroyEnemy), 0.5f);
+        currentHealth -= damage;
+        healthBar.value = CalculateHealth();
+        if (currentHealth <= 0)
+            Invoke(nameof(DestroyEnemy), 0.15f);
 
     }
     private void DestroyEnemy() => Destroy(gameObject);

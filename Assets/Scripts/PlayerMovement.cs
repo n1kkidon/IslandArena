@@ -25,11 +25,22 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
 
+    [Header("Combat")]
+    public float attackCooldown = 0.8f;
+    public float attackDamage = 25;
+    public float attackRange = 3;
+    public Transform attackPoint;
+    public LayerMask enemy;
+
+    bool readyToAttack;
+    void ResetAttackCd() => readyToAttack = true;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        readyToAttack = true;
     }
 
     private void FixedUpdate()
@@ -47,7 +58,28 @@ public class PlayerMovement : MonoBehaviour
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
+        if(Input.GetButton("Fire1") && readyToAttack)
+        {
+            readyToAttack = false;
+            Attack();
+            Invoke(nameof(ResetAttackCd), attackCooldown);
+        }
 
+    }
+    private void Attack()
+    {
+        //play animation here
+
+        var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
+        foreach(var item in enemiesHit)
+        {
+            item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage);
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     private void MovePlayer()
