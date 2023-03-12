@@ -7,8 +7,11 @@ public class GameManager : MonoBehaviour
 {
 
     public GameObject gameOverUI;
+    public GameObject pauseMenuUI;
+
     public GameObject player;
     public GameObject playerCam;
+    bool isPaused = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +21,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(gameOverUI.activeInHierarchy)
+        if(Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeInHierarchy)
+        {
+            if (isPaused)
+                ResumeGame();
+            else PauseGame();
+            isPaused = !isPaused;          
+        }
+        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -39,5 +49,15 @@ public class GameManager : MonoBehaviour
     public void Restart() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     public void MainMenu() => SceneManager.LoadScene("MainMenu");
     public void Quit() => Application.Quit();
+    public void PauseGame()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    public void ResumeGame()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
 
 }

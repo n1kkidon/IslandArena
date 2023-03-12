@@ -10,11 +10,12 @@ public class Enemy : MonoBehaviour
     NavMeshAgent agent;
     Transform player;
     public LayerMask groundLayer, playerLayer;
+    public Slider healthBar;
 
     Vector3 walkPoint;
     bool walkPointSet;
     float walkPointRange;
-
+    [Header("Stats")]
     public float AttackCooldown = 0.7f;
     bool alreadyAttacked;
 
@@ -26,7 +27,7 @@ public class Enemy : MonoBehaviour
     PlayerHealth playerHealth;
     public float maxHealth = 250f;
     float currentHealth;
-    public Slider healthBar;
+    
 
     private void Awake()
     {
