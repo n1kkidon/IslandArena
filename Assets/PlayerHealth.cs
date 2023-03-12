@@ -8,7 +8,9 @@ public class PlayerHealth : MonoBehaviour
     public float currentHealth;
 
     public HealthBar healthBar;
+    public GameManager manager;
 
+    bool isDead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,5 +32,10 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
 
         healthBar.SetHealth(currentHealth);
+        if(currentHealth <= 0 && !isDead)
+        {
+            isDead = true;           
+            manager.GameOver();
+        }
     }
 }

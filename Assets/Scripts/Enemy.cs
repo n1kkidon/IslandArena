@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-
+    public GameManager manager;
     NavMeshAgent agent;
-    public Transform player;
+    Transform player;
     public LayerMask groundLayer, playerLayer;
 
     Vector3 walkPoint;
@@ -31,7 +31,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        var playertmp = GameObject.Find("Player");
+        var playertmp = manager.player;
         player = playertmp.transform;
         playerHealth = playertmp.GetComponent<PlayerHealth>();
     }
