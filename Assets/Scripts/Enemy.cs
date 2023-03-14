@@ -29,13 +29,15 @@ public class Enemy : MonoBehaviour
     float currentHealth;
     
 
-    private void Awake()
+    public void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         var playertmp = manager.player;
         player = playertmp.transform;
         playerHealth = playertmp.GetComponent<PlayerHealth>();
     }
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -104,7 +106,26 @@ public class Enemy : MonoBehaviour
             Invoke(nameof(DestroyEnemy), 0.15f);
 
     }
-    private void DestroyEnemy() => Destroy(gameObject);
+    private void DestroyEnemy()
+    {
+        Destroy(gameObject);
+        CreateNewEnemy(gameObject, 1f);
+        CreateNewEnemy(gameObject, 2f);
+    }
+    private void CreateNewEnemy(GameObject _gameObject, float offset)
+    {
+        var clone = Instantiate(_gameObject, new Vector3(_gameObject.transform.position.x + offset, _gameObject.transform.position.y, _gameObject.transform.position.z + offset), Quaternion.identity);
+        var item = clone.GetComponent<Enemy>();
+        clone.GetComponent<NavMeshAgent>().enabled = true;
+        item.enabled = true;
+        item.healthBar.enabled = true;
+        item.maxHealth = item.maxHealth * 2;
+        item.attackDamage *= 2;
+        item.GetComponentInChildren<CanvasScaler>().enabled = true;
+        item.GetComponentInChildren<Canvas>().enabled = true;
+        item.GetComponentInChildren<GraphicRaycaster>().enabled = true;
+        item.GetComponentInChildren<Slider>().enabled = true;
+    }
 
     private void SearchWalkPoint()
     {
