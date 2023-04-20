@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class Enemy : MonoBehaviour
 {
@@ -32,7 +33,8 @@ public class Enemy : MonoBehaviour
     public void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        var playertmp = manager.player;
+        //var playertmp = manager.player;
+        var playertmp = GameObject.Find("Player");
         player = playertmp.transform;
         playerHealth = playertmp.GetComponent<PlayerHealth>();
     }
@@ -109,8 +111,8 @@ public class Enemy : MonoBehaviour
     private void DestroyEnemy()
     {
         Destroy(gameObject);
-        CreateNewEnemy(gameObject, 1f);
-        CreateNewEnemy(gameObject, 2f);
+        //CreateNewEnemy(gameObject, 1f);
+        //CreateNewEnemy(gameObject, 2f);
     }
     private void CreateNewEnemy(GameObject _gameObject, float offset)
     {
