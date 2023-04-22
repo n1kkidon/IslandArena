@@ -11,7 +11,7 @@ namespace Assets.Scripts.Saving
 {
     public static class SaveSystem
     {
-        private static string path = Path.Combine(Application.persistentDataPath, "gameSaveData");
+        private static readonly string path = Path.Combine(Application.persistentDataPath, "gameSaveData");
 
         public static void Save(GameData data)
         {

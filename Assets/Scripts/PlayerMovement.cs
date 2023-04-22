@@ -7,10 +7,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour, IDataPersistence
 {
     [Header("Movement")]
-    public float moveSpeed;
+    public float moveSpeed = 8f;
     public float jumpForce;
     public float airMultiplier = 0.4f;
     public float jumpCooldown = 0.25f;
+    public float sneakMultiplier = 0.4f;
+    public float sprintMultiplier = 3f;
 
     public float groundDrag;
 
@@ -86,11 +88,16 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     private void MovePlayer()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        var force = 10f * moveSpeed * moveDirection.normalized;
+        if (!grounded)
+            force *= airMultiplier;
+        if (Input.GetKey(KeyCode.LeftControl))
+            force *= sneakMultiplier;
+        else if(Input.GetKey(KeyCode.LeftShift))
+            force *= sprintMultiplier;
         
-        if(grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        else if(!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        rb.AddForce(force, ForceMode.Force);
     }
 
 

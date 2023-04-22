@@ -49,7 +49,7 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     void WaveCompleted()
     {
         Debug.Log("Wave completed");
-        
+        DataPersistenceManager.Instance.SaveGame();
         state=SpawnState.COUNTING;
         waveCountDown = timeBetweenWaves;
         if (nextWave + 1 > Waves.Length - 1)
