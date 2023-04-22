@@ -1,8 +1,9 @@
+using Assets.Scripts.Saving;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDataPersistence
 {
     public float maxHealth = 100;
     public float currentHealth;
@@ -37,5 +38,18 @@ public class PlayerHealth : MonoBehaviour
             isDead = true;           
             manager.GameOver();
         }
+    }
+
+    public void LoadData(GameData data)
+    {
+        currentHealth = data.currentHealth;
+        maxHealth = data.maxHealth;
+        healthBar.SetHealth(currentHealth);
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.currentHealth = currentHealth;
+        data.maxHealth = maxHealth;
     }
 }

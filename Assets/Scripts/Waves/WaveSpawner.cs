@@ -1,20 +1,12 @@
+using Assets.Scripts.Saving;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class WaveSpawner : MonoBehaviour
+public partial class WaveSpawner : MonoBehaviour, IDataPersistence
 {
-    public enum SpawnState { SPAWNING, WAITING, COUNTING};
-    
-    [System.Serializable]
-    public class Wave
-    {
-        public Transform enemy;
-        public int count;
-        public float rate;
-    }
 
     public Wave[] Waves;
     private int nextWave = 0;
@@ -104,5 +96,19 @@ public class WaveSpawner : MonoBehaviour
         Debug.Log("Spawning enemy: " + _enemy.name);
         Transform _sp = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Instantiate(_enemy, _sp.position, Quaternion.identity);
+    }
+
+    public void LoadData(GameData data)
+    {
+        state = data.state;
+        nextWave = data.currentWave;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.state = state;
+        if(EnemyIsAlive() && nextWave != 0)
+            data.currentWave = nextWave -1;
+        else data.currentWave = nextWave;
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Scripts.Saving;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public GameObject gameOverUI;
     public GameObject pauseMenuUI;
 
@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        LoadGame();
     }
 
     // Update is called once per frame
@@ -40,15 +40,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void LoadGame()
+    {
+        var item = DataPersistenceManager.Instance;
+        item.LoadGame();
+    }
+    public void SaveGame()
+    {
+        var item = DataPersistenceManager.Instance;
+        item.SaveGame();
+    }
     public void GameOver()
     {
         player.GetComponent<PlayerMovement>().enabled = false;
         playerCam.GetComponent<ThirdPersonCam>().enabled = false;
         gameOverUI.SetActive(true);
     }
-    public void Restart() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    public void MainMenu() => SceneManager.LoadScene("MainMenu");
-    public void Quit() => Application.Quit();
+    public void Restart() 
+    { 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SaveSystem.DeleteSaveFile();
+    }
+    public void RestartFromLastSave() 
+    { 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void MainMenu() 
+    {
+        SaveGame();
+        SceneManager.LoadScene("MainMenu"); 
+    }
+    public void Quit()
+    {
+        SaveGame();
+        Application.Quit();
+    }
     public void PauseGame()
     {
         pauseMenuUI.SetActive(true);
@@ -59,5 +85,4 @@ public class GameManager : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
     }
-
 }

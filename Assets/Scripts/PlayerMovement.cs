@@ -1,9 +1,10 @@
+using Assets.Scripts.Saving;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IDataPersistence
 {
     [Header("Movement")]
     public float moveSpeed;
@@ -118,4 +119,14 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(transform.up *jumpForce, ForceMode.Impulse);
     }
     private void ResetJump() => readyToJump = true;
+
+    public void LoadData(GameData data)
+    {
+        transform.position = data.playerPosition.ToVector3();
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.playerPosition = transform.position.ToFloatArray();
+    }
 }
