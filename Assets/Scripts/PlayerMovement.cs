@@ -76,7 +76,10 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
         foreach(var item in enemiesHit)
         {
-            item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage);
+            if(item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage, out var loot))
+            {
+                gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
+            }
         }
     }
     private void OnDrawGizmosSelected()

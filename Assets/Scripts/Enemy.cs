@@ -28,7 +28,13 @@ public class Enemy : MonoBehaviour
     PlayerHealth playerHealth;
     public float maxHealth = 250f;
     float currentHealth;
-    
+
+    [Header("Loot")]
+    public int goldTarget = 50;
+    public int goldTargetDeviation = 6;
+    public int expTarget = 80;
+    public int expTargetDeviation = 9;
+
 
     public void Awake()
     {
@@ -100,12 +106,18 @@ public class Enemy : MonoBehaviour
             Invoke(nameof(ResetAttack), AttackCooldown);
         }
     }
-    public void TakeDamage(float damage)
+    public bool TakeDamage(float damage, out MobDrop loot)
     {
         currentHealth -= damage;
         healthBar.value = CalculateHealth();
         if (currentHealth <= 0)
+        {
             Invoke(nameof(DestroyEnemy), 0.15f);
+            loot = DropLoot();
+            return true;
+        }
+        loot = null;
+        return false;
 
     }
     private void DestroyEnemy()
@@ -114,6 +126,18 @@ public class Enemy : MonoBehaviour
         //CreateNewEnemy(gameObject, 1f);
         //CreateNewEnemy(gameObject, 2f);
     }
+
+    private MobDrop DropLoot()
+    {
+        var random = new System.Random();
+        var drop = new MobDrop()
+        {
+            Gold = random.Next(goldTarget - goldTargetDeviation, goldTarget + goldTargetDeviation),
+            Experience = random.Next(expTarget - expTargetDeviation, expTarget + expTargetDeviation),
+        };
+        return drop;
+    }
+
     private void CreateNewEnemy(GameObject _gameObject, float offset)
     {
         var clone = Instantiate(_gameObject, new Vector3(_gameObject.transform.position.x + offset, _gameObject.transform.position.y, _gameObject.transform.position.z + offset), Quaternion.identity);

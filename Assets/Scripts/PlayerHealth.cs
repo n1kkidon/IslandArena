@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
     public float maxHealth = 100;
     public float currentHealth;
 
-    public HealthBar healthBar;
+    public PlayerScreenUI healthBar;
     public GameManager manager;
 
     bool isDead = false;

@@ -15,5 +15,11 @@ namespace Assets.Scripts.Saving
         public float[] playerPosition;
         public SpawnState state;
         public int currentWave;
+        public int gold;
+        public int level;
+        public int experience;
+        public int expToNextLevel;
+        public int levelPointsUsed;
+        public int levelPointsAvailable;
     }
 }
