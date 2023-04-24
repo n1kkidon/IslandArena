@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -7,11 +8,12 @@ using static UnityEditor.Progress;
 
 public class Enemy : MonoBehaviour
 {
-    public GameManager manager;
+    //public GameManager manager;
     NavMeshAgent agent;
     Transform player;
     public LayerMask groundLayer, playerLayer;
-    public Slider healthBar;
+    Slider healthBar;
+    Animator animator;
 
     Vector3 walkPoint;
     bool walkPointSet;
@@ -43,6 +45,8 @@ public class Enemy : MonoBehaviour
         var playertmp = GameObject.Find("Player");
         player = playertmp.transform;
         playerHealth = playertmp.GetComponent<PlayerHealth>();
+        animator = GetComponentInChildren<Animator>();
+        healthBar = GetComponentInChildren<Slider>();
     }
 
 
@@ -79,6 +83,7 @@ public class Enemy : MonoBehaviour
 
     private void Patroling()
     {
+        animator.SetBool("IsInVisionRange", false);
         if (!walkPointSet)
             SearchWalkPoint();
         else
@@ -89,10 +94,16 @@ public class Enemy : MonoBehaviour
         if (distanceToWalkPoint.magnitude < 1f)
             walkPointSet = false;
     }
-    private void ChasePlayer() => agent.SetDestination(player.position);
+    private void ChasePlayer()
+    {
+        animator.SetBool("IsInVisionRange", true);
+        animator.SetBool("IsInAttackRange", false);
+        agent.SetDestination(player.position);
+    }
 
     private void AttackPlayer()
     {
+        animator.SetBool("IsInAttackRange", true);
         if((transform.position - player.position).magnitude < tetherRange) 
             agent.SetDestination(transform.position);
         else agent.SetDestination(player.position);
@@ -100,26 +111,41 @@ public class Enemy : MonoBehaviour
         if(!alreadyAttacked)
         {
             //Need to put attacking logic here 
-            playerHealth.TakeDamage(attackDamage);
-            //
+            animator.SetTrigger("AttackPlayer");
+            var delay = animator.GetCurrentAnimatorStateInfo(0).length;
             alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), AttackCooldown);
+            Invoke(nameof(HitPlayer), delay*0.3f);
+            
+            //
+            
         }
+    }
+    void HitPlayer()
+    {
+        playerHealth.TakeDamage(attackDamage);
+        Invoke(nameof(ResetAttack), AttackCooldown);
     }
     public bool TakeDamage(float damage, out MobDrop loot)
     {
         currentHealth -= damage;
         healthBar.value = CalculateHealth();
+        animator.SetTrigger("GotHit");
+        PauseAgent();
+        Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length);
         if (currentHealth <= 0)
         {
-            Invoke(nameof(DestroyEnemy), 0.15f);
+            animator.SetBool("Died", true);
+            Invoke(nameof(DestroyEnemy), animator.GetCurrentAnimatorStateInfo(0).length * 2);
             loot = DropLoot();
+            this.enabled = false;
             return true;
         }
         loot = null;
         return false;
 
     }
+    void ResumeAgent() => agent.isStopped = false;
+    void PauseAgent() => agent.isStopped = true;
     private void DestroyEnemy()
     {
         Destroy(gameObject);
