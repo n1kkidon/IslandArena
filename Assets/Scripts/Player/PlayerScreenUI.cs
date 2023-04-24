@@ -9,6 +9,7 @@ public class PlayerScreenUI : MonoBehaviour
     public Slider sliderEXP;
     public GameObject expText;
     public GameObject goldText;
+    public GameObject waveText;
 
     public void SetMaxHealth(float health)
     {
@@ -30,5 +31,16 @@ public class PlayerScreenUI : MonoBehaviour
     public void SetGold(int gold)
     {
         goldText.GetComponent<Text>().text = $"Gold: {gold}";
+    }
+    public void SetWave(int wave, int enemies, float time)
+    {
+        if (enemies <= 0)
+        {
+            waveText.GetComponent<Text>().text = $"Current wave: {wave}\nTime until next wave: {time}";
+        }
+        else
+        {
+            waveText.GetComponent<Text>().text = $"Current wave: {wave}\nEnemies remaining: {enemies}";
+        }
     }
 }
