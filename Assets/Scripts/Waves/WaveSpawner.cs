@@ -10,11 +10,13 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
 
     public Wave[] Waves;
     private int nextWave = 0;
+    private int enemiesAlive = 0;
     public Transform[] SpawnPoints;
     public float timeBetweenWaves = 5f;
     private float waveCountDown;
     private float searchCountdown = 1f;
     private SpawnState state = SpawnState.COUNTING;
+    public PlayerScreenUI ScreenUI;
 
     void Start()
     {
@@ -22,6 +24,7 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     }
     void Update()
     {
+        ScreenUI.SetWave(nextWave+1, enemiesAlive, waveCountDown);
         if(state== SpawnState.WAITING)
         {
             if(!EnemyIsAlive())
@@ -69,7 +72,8 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
         if(searchCountdown<= 0)
         {
             searchCountdown = 1f;
-            if (GameObject.FindGameObjectWithTag("Enemy") == null)
+            enemiesAlive = GameObject.FindGameObjectsWithTag("Enemy").Length;
+            if (enemiesAlive==0)
             {
                 return false;
             }
@@ -96,6 +100,7 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
         Debug.Log("Spawning enemy: " + _enemy.name);
         Transform _sp = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Instantiate(_enemy, _sp.position, Quaternion.identity);
+        enemiesAlive++;
     }
 
     public void LoadData(GameData data)
