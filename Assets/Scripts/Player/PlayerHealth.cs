@@ -11,7 +11,14 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
     public PlayerScreenUI healthBar;
     public GameManager manager;
 
+    Animator animator;
+
     bool isDead = false;
+    void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +37,14 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
 
     public void TakeDamage(float damage)
     {
+        animator.SetTrigger("GetHit");
         currentHealth -= damage;
 
         healthBar.SetHealth(currentHealth);
         if(currentHealth <= 0 && !isDead)
         {
-            isDead = true;           
+            isDead = true;
+            animator.SetBool("Died", true);
             manager.GameOver();
         }
     }

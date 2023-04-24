@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     public float sneakMultiplier = 0.4f;
     public float sprintMultiplier = 3f;
 
+    Animator animator;
+
     public float groundDrag;
 
     [Header("Ground Check")]
@@ -38,6 +40,11 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     bool readyToAttack;
     void ResetAttackCd() => readyToAttack = true;
 
+    void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,31 +64,35 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
 
         if (Input.GetButton("Jump") && readyToJump && grounded)
         {
+            animator.SetTrigger("Jump");
             readyToJump = false;
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         if(Input.GetButton("Fire1") && readyToAttack)
         {
+            animator.SetTrigger("AttackEnemy");
             readyToAttack = false;
-            Attack();
-            Invoke(nameof(ResetAttackCd), attackCooldown);
+            var delay = animator.GetCurrentAnimatorStateInfo(0).length;
+            Invoke(nameof(Attack), delay * 0.3f);
+            
         }
 
     }
     private void Attack()
     {
-        //play animation here
+        Invoke(nameof(ResetAttackCd), attackCooldown);
 
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
-        foreach(var item in enemiesHit)
+        foreach (var item in enemiesHit)
         {
-            if(item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage, out var loot))
+            if (item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage, out var loot))
             {
                 gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
             }
         }
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
@@ -90,15 +101,33 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
 
     private void MovePlayer()
     {
+        animator.SetBool("Run", true);
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        if(moveDirection == Vector3.zero)
+        {
+            animator.SetBool("Run", false);
+        }
 
         var force = 10f * moveSpeed * moveDirection.normalized;
         if (!grounded)
             force *= airMultiplier;
         if (Input.GetKey(KeyCode.LeftControl))
+        {
+            animator.SetBool("Sneak", true);
             force *= sneakMultiplier;
-        else if(Input.GetKey(KeyCode.LeftShift))
+        }
+        else if (Input.GetKey(KeyCode.LeftShift))
+        {
+            animator.SetBool("Sprint", true);
             force *= sprintMultiplier;
+        }
+        else
+        {
+            animator.SetBool("Sneak", false);
+            animator.SetBool("Sprint", false);
+        }
+            
         
         rb.AddForce(force, ForceMode.Force);
     }

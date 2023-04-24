@@ -114,10 +114,10 @@ public class Enemy : MonoBehaviour
             animator.SetTrigger("AttackPlayer");
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
             alreadyAttacked = true;
-            Invoke(nameof(HitPlayer), delay*0.3f);
-            
-            //
-            
+            if(playerHealth.currentHealth > 0)
+            {
+                Invoke(nameof(HitPlayer), delay * 0.3f);
+            }   
         }
     }
     void HitPlayer()
