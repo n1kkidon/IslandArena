@@ -28,15 +28,16 @@ public class Enemy : MonoBehaviour
     public float tetherRange = 0.5f;
 
     PlayerHealth playerHealth;
-    public float maxHealth = 250f;
+    public float maxHealth = 60f;
     float currentHealth;
+    private float baseHP = 250f;
 
     [Header("Loot")]
     public int goldTarget = 50;
     public int goldTargetDeviation = 6;
     public int expTarget = 80;
     public int expTargetDeviation = 9;
-
+    private float currHpPercent;
 
     public void Awake()
     {
@@ -56,6 +57,7 @@ public class Enemy : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthBar.value = CalculateHealth();
+        currHpPercent = currentHealth / maxHealth;
     }
 
     private float CalculateHealth() => currentHealth / maxHealth;
@@ -72,13 +74,42 @@ public class Enemy : MonoBehaviour
     {
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, playerLayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayer);
-
+        currHpPercent = currentHealth / maxHealth;
+        IncreaseDamage();
         if (!playerInSightRange && !playerInAttackRange)
             Patroling();
         if (playerInSightRange && !playerInAttackRange)
             ChasePlayer();
         else if (playerInAttackRange && playerInSightRange)
             AttackPlayer();
+    }
+    bool test = false;
+    private void IncreaseDamage()
+    {
+        var sunlightRot = TimeController.instance.sunLightRotation;
+        
+        if (sunlightRot >= 180)
+        {
+            if (test)
+            {
+                baseHP = 60;
+                test = false;
+            }
+            maxHealth = baseHP + (sunlightRot -180);
+
+            currentHealth = maxHealth * currHpPercent;
+            
+        }
+        else
+        {
+            if (!test)
+            {
+                test = true;
+                baseHP = 60 + 180;
+            }
+            maxHealth = baseHP - (sunlightRot);
+            currentHealth = maxHealth * currHpPercent;
+        }
     }
 
     private void Patroling()

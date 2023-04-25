@@ -13,6 +13,11 @@ public class TimeController : MonoBehaviour
 
     private DateTime currentTime;
 
+    public static TimeController instance;
+    private void Awake()
+    {
+        instance = this;
+    }
     [SerializeField]
     private Light sunLight;
 
@@ -43,6 +48,7 @@ public class TimeController : MonoBehaviour
 
     [SerializeField]
     private float maxMoonLightIntensity;
+    public float sunLightRotation;
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +74,7 @@ public class TimeController : MonoBehaviour
 
     private void RotateSun()
     {
-        float sunLightRotation;
+        
 
         if (currentTime.TimeOfDay > sunriseTime && currentTime.TimeOfDay < sunsetTime)
         {
