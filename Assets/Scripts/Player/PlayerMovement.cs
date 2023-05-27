@@ -8,6 +8,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 {
     [Header("Movement")]
     public float moveSpeed = 8f;
+    float totalMovespeed;
     public float jumpForce;
     public float airMultiplier = 0.4f;
     public float jumpCooldown = 0.7f;
@@ -26,6 +27,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public Transform orientation;
     float horizontalInput;
     float verticalInput;
+    private System.Random random;
 
     Vector3 moveDirection;
     Rigidbody rb;
@@ -56,6 +58,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         totalAttackDamage = baseAttackDamage;
         modifiedAttackCooldown = baseAttackCooldown;
         funnyPos = playerCapsule.transform.position;
+        random = new System.Random();
+        totalMovespeed = moveSpeed;
     }
 
     private void FixedUpdate()
@@ -90,6 +94,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         Invoke(nameof(ResetAttackCd), modifiedAttackCooldown);
 
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
+        var nextAttack = CritChanceMod(totalAttackDamage);
+        Debug.Log($"attack damage: {nextAttack}");
         foreach (var item in enemiesHit)
         {
             if (item.gameObject.GetComponent<Enemy>().TakeDamage(totalAttackDamage, out var loot))
@@ -117,7 +123,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
             animator.SetBool("Run", false);
         }
 
-        var force = 10f * moveSpeed * moveDirection.normalized;
+        var force = 10f * totalMovespeed * moveDirection.normalized;
         if (!grounded && !waterGrounded)
             force *= airMultiplier;
         if (Input.GetKey(KeyCode.LeftControl))
@@ -157,9 +163,9 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     private void SpeedControl()
     {
         Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        if(flatVelocity.magnitude > moveSpeed)
+        if(flatVelocity.magnitude > totalMovespeed)
         {
-            Vector3 limitedVelocity = flatVelocity.normalized * moveSpeed;
+            Vector3 limitedVelocity = flatVelocity.normalized * totalMovespeed;
             rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
         }
     }

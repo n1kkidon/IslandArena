@@ -19,7 +19,11 @@ public class GameManager : MonoBehaviour
     {
         LoadGame();
     }
-
+    void Awake()
+    {
+        skillTreeUI.SetActive(true);
+        skillTreeUI.SetActive(false);
+    }
 
     void CloseUI()
     {

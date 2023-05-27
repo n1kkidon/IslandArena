@@ -24,13 +24,13 @@ public class SkillTree : MonoBehaviour
             Debug.LogError("more than 1 instance of SkillTree!");
         }
         Instance = this;
+        var json = File.ReadAllText("islandArena_skills.json");
+        skillObjects = JsonConvert.DeserializeObject<Dictionary<string, SkillObject>>(json);
+        SkillList = GetComponentsInChildren<Skill>().ToDictionary(x => x.dictionaryKey);
     }
 
     private void Start()
     {
-        var json = File.ReadAllText("islandArena_skills.json");
-        skillObjects = JsonConvert.DeserializeObject<Dictionary<string, SkillObject>>(json);
-        SkillList = GetComponentsInChildren<Skill>().ToDictionary(x => x.dictionaryKey);
         UpdateAllSkillUI();
         UpdatePointsCounter();
     }

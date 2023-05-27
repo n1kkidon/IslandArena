@@ -530,6 +530,7 @@ MonoBehaviour:
   enemy:
     serializedVersion: 2
     m_Bits: 256
+  skillTree: {fileID: 285698286}
   waterLayer:
     serializedVersion: 2
     m_Bits: 16
@@ -13368,6 +13369,10 @@ PrefabInstance:
     - target: {fileID: 3245065550778018416, guid: c16b1be329c0b8748aea6d4b0200212a, type: 3}
       propertyPath: dictionaryKey
       value: doubleJump
+      objectReference: {fileID: 0}
+    - target: {fileID: 3245065550778018416, guid: c16b1be329c0b8748aea6d4b0200212a, type: 3}
+      propertyPath: playerMovement
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3245065550778018430, guid: c16b1be329c0b8748aea6d4b0200212a, type: 3}
       propertyPath: m_Name
