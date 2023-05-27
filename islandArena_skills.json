@@ -1,0 +1,125 @@
+{
+	"doubleJump": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "Double Jump",
+		"SkillDescription": "Allows the user to jump twice.",
+		"Root": false,
+		"ChildSkillObjects": [
+			"invisibility"
+		]
+	},
+	"hp": {
+		"SkillLevel": 0,
+		"SkillCap": 5,
+		"SkillName": "Tankiness",
+		"SkillDescription": "You gain more health and become harder to kill.",
+		"Root": true,
+		"ChildSkillObjects": [
+			"stun",
+			"regen"
+		]
+	},
+	"attackDamage": {
+		"SkillLevel": 0,
+		"SkillCap": 5,
+		"SkillName": "Lethal hits",
+		"SkillDescription": "Increases the damage of your attacks.",
+		"Root": true,
+		"ChildSkillObjects": [
+			"critChance",
+			"parry"
+		]
+	},
+	"critChance": {
+		"SkillLevel": 0,
+		"SkillCap": 3,
+		"SkillName": "Critical chance",
+		"SkillDescription": "Your attacks have a chance to crit.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"slowDownTime": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "God of time",
+		"SkillDescription": "Allows the user to slow down time.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"parry": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "Parry",
+		"SkillDescription": "Allows the user to block attacks.",
+		"Root": false,
+		"ChildSkillObjects": [
+			"slowDownTime"
+		]
+	},
+	"invisibility": {
+		"SkillLevel": 0,
+		"SkillCap": 3,
+		"SkillName": "Invisibility",
+		"SkillDescription": "Allows the user to become invisible for a duration.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"waterWalking": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "Waterwalking",
+		"SkillDescription": "Allows the user to walk on water.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"moveSpeed": {
+		"SkillLevel": 0,
+		"SkillCap": 3,
+		"SkillName": "Increased movespeed",
+		"SkillDescription": "Grants the user increased movement speed.",
+		"Root": true,
+		"ChildSkillObjects": [
+			"doubleJump",
+			"waterWalking"
+		]
+	},
+	"stun": {
+		"SkillLevel": 0,
+		"SkillCap": 2,
+		"SkillName": "Stun",
+		"SkillDescription": "Allows the user to stun a target for a duration.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"regen": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "Regeneration",
+		"SkillDescription": "Grants the user ability to slowly regenerate missing health.",
+		"Root": false,
+		"ChildSkillObjects": [
+			
+		]
+	},
+	"attackSpeed": {
+		"SkillLevel": 0,
+		"SkillCap": 1,
+		"SkillName": "Increased attack speed",
+		"SkillDescription": "Grants the user increased attack speed.",
+		"Root": true,
+		"ChildSkillObjects": [
+			"parry"
+		]
+	}
+}

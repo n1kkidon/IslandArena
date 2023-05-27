@@ -8,27 +8,64 @@ public class GameManager : MonoBehaviour
 {
     public GameObject gameOverUI;
     public GameObject pauseMenuUI;
+    public GameObject skillTreeUI;
 
     public GameObject player;
     public GameObject playerCam;
     bool isPaused = false;
+    bool isInSkillTrees = false;
     // Start is called before the first frame update
     void Start()
     {
         LoadGame();
     }
 
+
+    void CloseUI()
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+            isPaused = false;
+        }
+        if (isInSkillTrees)
+        {
+            CloseSkillTree();
+            isInSkillTrees = false;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeInHierarchy)
+        if (!gameOverUI.activeInHierarchy)
         {
-            if (isPaused)
-                ResumeGame();
-            else PauseGame();
-            isPaused = !isPaused;          
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!isPaused && !isInSkillTrees)
+                {
+                    PauseGame();
+                    isPaused=true;
+                }
+                else
+                {
+                    CloseUI();
+                }
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
+            {
+                if (isInSkillTrees)
+                    CloseSkillTree();
+                else OpenSkillTree();
+                isInSkillTrees = !isInSkillTrees;
+            }
         }
-        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy)
+       
+        
+
+
+        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -83,6 +120,16 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void OpenSkillTree()
+    {
+        skillTreeUI.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    public void CloseSkillTree()
+    {
+        skillTreeUI.SetActive(false);
         Time.timeScale = 1f;
     }
 }

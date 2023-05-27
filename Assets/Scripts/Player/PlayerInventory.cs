@@ -77,5 +77,6 @@ public class PlayerInventory : MonoBehaviour, IDataPersistence
         level++;
         expToNextLevel = Mathf.RoundToInt(100 + baseXp * Mathf.Pow((float)level / xpScalingFactor, xpExponentialFactor));
         levelPointsAvailable++;
+        SkillTree.Instance.UpdatePointsCounter();
     }
 }
