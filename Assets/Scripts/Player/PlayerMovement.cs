@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour, IDataPersistence
+public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 {
     [Header("Movement")]
     public float moveSpeed = 8f;
@@ -51,6 +51,7 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         readyToAttack = true;
+        //InitializeSpecialSkills();
     }
 
     private void FixedUpdate()
@@ -76,9 +77,9 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
             animator.SetTrigger("AttackEnemy");
             readyToAttack = false;
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
-            Invoke(nameof(Attack), delay * 0.3f);
-            
+            Invoke(nameof(Attack), delay * 0.3f);       
         }
+        ListenForSpecialSkills();
 
     }
     private void Attack()
@@ -142,7 +143,7 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     {
         var funnyPos = playerCapsule.transform.position;
         funnyPos.y += 0.1f;
-        grounded = Physics.Raycast(funnyPos, Vector3.down, 0.2f, ground);
+        grounded = Physics.Raycast(funnyPos, Vector3.down, 0.2f, ground);     
         MyInput();
         SpeedControl();
         if (grounded)

@@ -114,7 +114,7 @@
 	},
 	"attackSpeed": {
 		"SkillLevel": 0,
-		"SkillCap": 1,
+		"SkillCap": 4,
 		"SkillName": "Increased attack speed",
 		"SkillDescription": "Grants the user increased attack speed.",
 		"Root": true,

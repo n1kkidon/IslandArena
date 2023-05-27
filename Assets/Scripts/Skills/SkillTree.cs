@@ -16,6 +16,7 @@ public class SkillTree : MonoBehaviour
     public PlayerInventory playerInventory;
     public static SkillTree Instance;
     public TMP_Text pointsCounter;
+    public PlayerMovement playerMovement;
     private void Awake()
     {
         if (Instance != null)

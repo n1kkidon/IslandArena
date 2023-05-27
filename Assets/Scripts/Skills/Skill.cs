@@ -21,6 +21,7 @@ public class Skill : MonoBehaviour
             bgImage.color = Color.blue;
             UnlockChildSkills();
         }
+        SkillTree.Instance.playerMovement.InitializeSpecialSkills();
     }
     public void UnlockChildSkills()
     {

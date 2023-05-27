@@ -25,13 +25,13 @@ public class GameManager : MonoBehaviour
     {
         if (isPaused)
         {
-            ResumeGame();
             isPaused = false;
+            ResumeGame();         
         }
         if (isInSkillTrees)
         {
-            CloseSkillTree();
             isInSkillTrees = false;
+            CloseSkillTree();         
         }
     }
 
@@ -44,8 +44,8 @@ public class GameManager : MonoBehaviour
             {
                 if (!isPaused && !isInSkillTrees)
                 {
+                    isPaused = true;
                     PauseGame();
-                    isPaused=true;
                 }
                 else
                 {
