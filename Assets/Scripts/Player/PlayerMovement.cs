@@ -31,8 +31,10 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     Rigidbody rb;
 
     [Header("Combat")]
-    public float attackCooldown = 0.8f;
-    public float attackDamage = 25;
+    public float baseAttackCooldown = 0.8f;
+    float modifiedAttackCooldown;
+    public float baseAttackDamage = 25;
+    float totalAttackDamage;
     public float attackRange = 3;
     public Transform attackPoint;
     public LayerMask enemy;
@@ -51,7 +53,9 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         readyToAttack = true;
-        //InitializeSpecialSkills();
+        totalAttackDamage = baseAttackDamage;
+        modifiedAttackCooldown = baseAttackCooldown;
+        funnyPos = playerCapsule.transform.position;
     }
 
     private void FixedUpdate()
@@ -64,9 +68,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         verticalInput = Input.GetAxis("Vertical");
 
 
-        if (Input.GetButton("Jump") && readyToJump && grounded)
+        if (Input.GetButton("Jump") && readyToJump && (grounded || waterGrounded))
         {
-            Debug.Log("jumping");
             animator.SetTrigger("Jump");
             readyToJump = false;
             Jump();
@@ -84,12 +87,12 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     }
     private void Attack()
     {
-        Invoke(nameof(ResetAttackCd), attackCooldown);
+        Invoke(nameof(ResetAttackCd), modifiedAttackCooldown);
 
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
         foreach (var item in enemiesHit)
         {
-            if (item.gameObject.GetComponent<Enemy>().TakeDamage(attackDamage, out var loot))
+            if (item.gameObject.GetComponent<Enemy>().TakeDamage(totalAttackDamage, out var loot))
             {
                 gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
             }
@@ -109,13 +112,13 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if(moveDirection == Vector3.zero || !grounded)
+        if(moveDirection == Vector3.zero || (!grounded && !waterGrounded))
         {
             animator.SetBool("Run", false);
         }
 
         var force = 10f * moveSpeed * moveDirection.normalized;
-        if (!grounded)
+        if (!grounded && !waterGrounded)
             force *= airMultiplier;
         if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -139,14 +142,15 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
 
     // Update is called once per frame
+    Vector3 funnyPos;
     void Update()
     {
-        var funnyPos = playerCapsule.transform.position;
+        funnyPos = playerCapsule.transform.position;
         funnyPos.y += 0.1f;
         grounded = Physics.Raycast(funnyPos, Vector3.down, 0.2f, ground);     
         MyInput();
         SpeedControl();
-        if (grounded)
+        if (grounded || waterGrounded)
             rb.drag = groundDrag;
         else rb.drag = 0;
     }
