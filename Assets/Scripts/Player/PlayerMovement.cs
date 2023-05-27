@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     public float moveSpeed = 8f;
     public float jumpForce;
     public float airMultiplier = 0.4f;
-    public float jumpCooldown = 0.25f;
+    public float jumpCooldown = 0.7f;
     public float sneakMultiplier = 0.4f;
     public float sprintMultiplier = 3f;
 
@@ -62,8 +62,10 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
+
         if (Input.GetButton("Jump") && readyToJump && grounded)
         {
+            Debug.Log("jumping");
             animator.SetTrigger("Jump");
             readyToJump = false;
             Jump();
@@ -101,10 +103,12 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
 
     private void MovePlayer()
     {
+        
         animator.SetBool("Run", true);
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if(moveDirection == Vector3.zero)
+        if(moveDirection == Vector3.zero || !grounded)
         {
             animator.SetBool("Run", false);
         }
@@ -136,7 +140,9 @@ public class PlayerMovement : MonoBehaviour, IDataPersistence
     // Update is called once per frame
     void Update()
     {
-        grounded = Physics.Raycast(playerCapsule.transform.position, Vector3.down, playerCapsule.height * 0.5f + 0.2f, ground);
+        var funnyPos = playerCapsule.transform.position;
+        funnyPos.y += 0.1f;
+        grounded = Physics.Raycast(funnyPos, Vector3.down, 0.2f, ground);
         MyInput();
         SpeedControl();
         if (grounded)
