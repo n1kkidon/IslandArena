@@ -32,15 +32,13 @@ public class GameManager : MonoBehaviour
     void CloseUI()
     {
         if (isPaused)
-        {
-            isPaused = false;
-            ResumeGame();         
-        }
+            ResumeGame();
         if (isInSkillTrees)
-        {
-            isInSkillTrees = false;
-            CloseSkillTree();         
-        }
+            CloseSkillTree();
+        if (shopOpen)
+            CloseShop();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -50,31 +48,26 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (!isPaused && !isInSkillTrees)
-                {
-                    isPaused = true;
+                if (!isPaused && !isInSkillTrees && !shopOpen)
                     PauseGame();
-                }
                 else
-                {
                     CloseUI();
-                }
 
             }
-            else if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
+            else if (Input.GetKeyDown(KeyCode.Tab) && !isPaused && !shopOpen)
             {
                 if (isInSkillTrees)
-                    CloseSkillTree();
+                    CloseUI();
                 else OpenSkillTree();
-                isInSkillTrees = !isInSkillTrees;
+            }
+            else if (Input.GetKeyDown(KeyCode.F1) && !isPaused && !isInSkillTrees)
+            {
+                if (shopOpen)
+                    CloseUI();
+                else OpenShop();
             }
         }
-        if(Input.GetKeyDown(KeyCode.F1) && !gameOverUI.activeInHierarchy)
-        {
-            if (shopOpen)
-                CloseShop();
-            else OpenShop();
-        }
+        
         if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy || shopUI.activeInHierarchy)
         {
             Cursor.visible = true;
@@ -119,13 +112,18 @@ public class GameManager : MonoBehaviour
     }
     public void PauseGame()
     {
+        isPaused = true;
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
     }
     public void ResumeGame()
     {
+        isPaused = false;
         pauseMenuUI.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;
+
     }
     public void OpenShop()
     {
@@ -143,11 +141,13 @@ public class GameManager : MonoBehaviour
     }
     public void OpenSkillTree()
     {
+        isInSkillTrees = true;
         skillTreeUI.SetActive(true);
         Time.timeScale = 0f;
     }
     public void CloseSkillTree()
     {
+        isInSkillTrees = false;
         skillTreeUI.SetActive(false);
         Time.timeScale = 1f;
     }
