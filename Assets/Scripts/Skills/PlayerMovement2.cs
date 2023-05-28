@@ -14,17 +14,21 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     bool canDoubleJump = false;
     bool canWaterWalk = false;
     bool regen = false;
+    bool canSlowDownTime = false;
     Coroutine healthRegen;
+    public FlashImage flashImage;
 
     public void ListenForSpecialSkills()
     {
         DoubleJumpLogic();
         JesusAntiGravityMode();
+        SlowDownTimeLogic();
     }
 
     public void InitializeSpecialSkills()
     { 
         canDoubleJump = SkillTree.Instance.skillObjects["doubleJump"].SkillLevel > 0;
+        canSlowDownTime = SkillTree.Instance.skillObjects["slowDownTime"].SkillLevel > 0;
         canWaterWalk = SkillTree.Instance.skillObjects["waterWalking"].SkillLevel > 0;
         regen = SkillTree.Instance.skillObjects["regen"].SkillLevel > 0;
         if (regen)
@@ -39,8 +43,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         else Physics.IgnoreLayerCollision(gameObject.layer, waterLayer, true);
 
 
-              
-        //slowDownTime = SkillTree.Instance.skillObjects["slowDownTime"].SkillLevel > 0;
+
+
         //parry = SkillTree.Instance.skillObjects["parry"].SkillLevel > 0;  
         //invisibility = SkillTree.Instance.skillObjects["invisibility"];   
         //stun = SkillTree.Instance.skillObjects["stun"];
@@ -51,6 +55,23 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         BonusDamageLogic();
         BonusAttackSpeedLogic();
         BonusMovespeedLogic();
+    }
+
+    void SlowDownTimeLogic()
+    {
+        if (canSlowDownTime)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                flashImage.FlashIn(0.1f, 0.15f, Color.gray);
+                Time.timeScale = 0.33f;
+            }
+            else if (Input.GetKeyUp(KeyCode.Mouse1))
+            {
+                flashImage.FlashOut(0.1f, 0.15f, Color.gray);
+                Time.timeScale = 1f;
+            }
+        }
     }
 
     void BonusMovespeedLogic()
