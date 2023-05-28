@@ -1,18 +1,22 @@
 using Assets.Scripts.Saving;
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverUI;
     public GameObject pauseMenuUI;
+    public GameObject shopUI;
     public GameObject skillTreeUI;
 
     public GameObject player;
     public GameObject playerCam;
     bool isPaused = false;
+    public static bool shopOpen {get; private set; } = false;
     bool isInSkillTrees = false;
     // Start is called before the first frame update
     void Start()
@@ -65,19 +69,16 @@ public class GameManager : MonoBehaviour
                 isInSkillTrees = !isInSkillTrees;
             }
         }
-       
-        
-
-
-        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy)
+        if(Input.GetKeyDown(KeyCode.F1) && !gameOverUI.activeInHierarchy)
+        {
+            if (shopOpen)
+                CloseShop();
+            else OpenShop();
+        }
+        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy || shopUI.activeInHierarchy)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
@@ -125,6 +126,20 @@ public class GameManager : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
+    }
+    public void OpenShop()
+    {
+        shopOpen=true;
+        shopUI.SetActive(true);
+        player.GetComponentInChildren<PlayerMovement>().enabled = false;
+        GameObject.Find("Camera").GetComponentInChildren<CinemachineBrain>().enabled=false;
+    }
+    public void CloseShop()
+    { 
+        shopOpen=false;
+        shopUI.SetActive(false);
+        player.GetComponentInChildren<PlayerMovement>().enabled = true;
+        GameObject.Find("Camera").GetComponentInChildren<CinemachineBrain>().enabled = true;
     }
     public void OpenSkillTree()
     {

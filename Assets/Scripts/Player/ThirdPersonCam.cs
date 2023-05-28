@@ -23,14 +23,24 @@ public class ThirdPersonCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var viewDirection = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
-        orientation.forward = viewDirection.normalized;
+        if (GameManager.shopOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            return;
+        }
+        else
+        {
+            var viewDirection = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+            orientation.forward = viewDirection.normalized;
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 inputDirection = orientation.forward * vertical + orientation.right * horizontal;
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+            Vector3 inputDirection = orientation.forward * vertical + orientation.right * horizontal;
 
-        if (inputDirection != Vector3.zero)
-            playerObject.forward = Vector3.Slerp(playerObject.forward, inputDirection.normalized, Time.deltaTime * rotationSpeed);
+            if (inputDirection != Vector3.zero)
+                playerObject.forward = Vector3.Slerp(playerObject.forward, inputDirection.normalized, Time.deltaTime * rotationSpeed);
+        }
+        
     }
 }

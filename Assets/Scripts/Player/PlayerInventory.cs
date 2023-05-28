@@ -16,6 +16,11 @@ public class PlayerInventory : MonoBehaviour, IDataPersistence
 
     private int levelPointsUsed; //you get 1 point per level (for now)
     public int levelPointsAvailable;
+    public static PlayerInventory instance;
+    private void Awake()
+    {
+        instance = this;
+    }
     public void LoadData(GameData data)
     {
         gold = data.gold;
@@ -78,5 +83,9 @@ public class PlayerInventory : MonoBehaviour, IDataPersistence
         expToNextLevel = Mathf.RoundToInt(100 + baseXp * Mathf.Pow((float)level / xpScalingFactor, xpExponentialFactor));
         levelPointsAvailable++;
         SkillTree.Instance.UpdatePointsCounter();
+    }
+    public void SubtractGold(int amount)
+    {
+        gold -= amount;
     }
 }
