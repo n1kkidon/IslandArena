@@ -11,26 +11,63 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverUI;
     public GameObject pauseMenuUI;
     public GameObject shopUI;
+    public GameObject skillTreeUI;
 
     public GameObject player;
     public GameObject playerCam;
     bool isPaused = false;
     public static bool shopOpen {get; private set; } = false;
+    bool isInSkillTrees = false;
     // Start is called before the first frame update
     void Start()
     {
         LoadGame();
     }
+    void Awake()
+    {
+        skillTreeUI.SetActive(true);
+        skillTreeUI.SetActive(false);
+    }
+
+    void CloseUI()
+    {
+        if (isPaused)
+        {
+            isPaused = false;
+            ResumeGame();         
+        }
+        if (isInSkillTrees)
+        {
+            isInSkillTrees = false;
+            CloseSkillTree();         
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && !gameOverUI.activeInHierarchy)
+        if (!gameOverUI.activeInHierarchy)
         {
-            if (isPaused)
-                ResumeGame();
-            else PauseGame();
-            isPaused = !isPaused;          
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!isPaused && !isInSkillTrees)
+                {
+                    isPaused = true;
+                    PauseGame();
+                }
+                else
+                {
+                    CloseUI();
+                }
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Tab) && !isPaused)
+            {
+                if (isInSkillTrees)
+                    CloseSkillTree();
+                else OpenSkillTree();
+                isInSkillTrees = !isInSkillTrees;
+            }
         }
         if(Input.GetKeyDown(KeyCode.F1) && !gameOverUI.activeInHierarchy)
         {
@@ -38,23 +75,10 @@ public class GameManager : MonoBehaviour
                 CloseShop();
             else OpenShop();
         }
-        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy)
+        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy || shopUI.activeInHierarchy)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            if(!shopOpen)
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
         }
     }
 
@@ -116,5 +140,15 @@ public class GameManager : MonoBehaviour
         shopUI.SetActive(false);
         player.GetComponentInChildren<PlayerMovement>().enabled = true;
         GameObject.Find("Camera").GetComponentInChildren<CinemachineBrain>().enabled = true;
+    }
+    public void OpenSkillTree()
+    {
+        skillTreeUI.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    public void CloseSkillTree()
+    {
+        skillTreeUI.SetActive(false);
+        Time.timeScale = 1f;
     }
 }
