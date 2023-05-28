@@ -5,12 +5,17 @@ using UnityEngine.UI;
 
 public partial class ButtonInfo : MonoBehaviour
 {
-    public int ItemID;
     public Text Price;
     public Text Name;
+    public int price;
+    public Item item;
     public GameObject ShopManager;
-    public int HealingAmount;
     public ItemType Type;
+    private void Start()
+    {
+        Price.text = price.ToString();
+        Name.text = item.itemName;
+    }
     void Update()
     {
         if(Type==ItemType.HealthPotion)

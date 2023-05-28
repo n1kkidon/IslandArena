@@ -1,4 +1,1 @@
-﻿public partial class ButtonInfo
-{
-    public enum ItemType { HealthPotion }
-}
+﻿public enum ItemType { HealthPotion, Weapon, OwnedWeapon, EquipedWeapon }

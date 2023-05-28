@@ -13,9 +13,9 @@ public class ShopManagerScript : MonoBehaviour
         if (PlayerInventory.instance.gold >= int.Parse(info.Price.text))
         {
             PlayerInventory.instance.SubtractGold(int.Parse(info.Price.text));
-            if (info.Type == ButtonInfo.ItemType.HealthPotion)
+            if (info.Type == ItemType.HealthPotion)
             {
-                PlayerHealth.instance.Heal(ButtonRef.GetComponent<ButtonInfo>().HealingAmount);
+                PlayerHealth.instance.Heal((ButtonRef.GetComponent<ButtonInfo>().item as HealthPotion).healingAmount);
             }
         }
     }
