@@ -196,8 +196,9 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     }
     public void EquipWeapon(Weapon weapon)
     {
+        equipedWeapon = weapon;
         modifiedAttackCooldown *= weapon.speedMultiplier;
         totalAttackDamage += weapon.damage;
         attackRange = weapon.attackRange;
-}
+    }
 }
