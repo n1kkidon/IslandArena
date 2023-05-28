@@ -47,7 +47,8 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
         currentHealth -= damage * playerMovement.takeDamageRatio;
 
         healthBar.SetHealth(currentHealth);
-        if(currentHealth <= 0 && !isDead)
+        playerMovement.flashImage.StartFlash(0.15f, 0.2f, Color.red);
+        if (currentHealth <= 0 && !isDead)
         {
             isDead = true;
             animator.SetBool("Died", true);
