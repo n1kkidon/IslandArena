@@ -14,9 +14,11 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
     Animator animator;
 
     bool isDead = false;
+    public static PlayerHealth instance;
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+        instance= this;
     }
 
     // Start is called before the first frame update
@@ -47,6 +49,16 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
             animator.SetBool("Died", true);
             manager.GameOver();
         }
+    }
+
+    public void Heal(int ammount)
+    {
+        if (currentHealth + ammount >= maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+        else currentHealth += ammount;
+        healthBar.SetHealth(currentHealth);
     }
 
     public void LoadData(GameData data)
