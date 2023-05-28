@@ -44,6 +44,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     bool readyToAttack;
     void ResetAttackCd() => readyToAttack = true;
 
+    [SerializeField] private AudioSource attackSoundEffect;
+
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -81,6 +83,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         }
         if(Input.GetButton("Fire1") && readyToAttack)
         {
+            attackSoundEffect.Play();
             animator.SetTrigger("AttackEnemy");
             readyToAttack = false;
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
@@ -113,7 +116,6 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
     private void MovePlayer()
     {
-        
         animator.SetBool("Run", true);
 
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;

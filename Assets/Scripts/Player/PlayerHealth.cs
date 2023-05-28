@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
     PlayerMovement playerMovement;
     bool isDead = false;
     public static PlayerHealth instance;
+
+    [SerializeField] private AudioSource painSoundEffect;
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -41,7 +43,6 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
 
     public void TakeDamage(float damage)
     {
-        
         animator.SetTrigger("GetHit");
         currentHealth -= damage * playerMovement.takeDamageRatio;
 
@@ -52,6 +53,7 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
             animator.SetBool("Died", true);
             manager.GameOver();
         }
+        painSoundEffect.Play();
     }
 
     public void Heal(int ammount)
