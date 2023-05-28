@@ -40,13 +40,16 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public float attackRange = 3;
     public Transform attackPoint;
     public LayerMask enemy;
+    public Weapon equipedWeapon = null;
 
     bool readyToAttack;
     void ResetAttackCd() => readyToAttack = true;
+    public static PlayerMovement instance;
 
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+        instance= this;
     }
 
     // Start is called before the first frame update
@@ -185,4 +188,10 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     {
         data.playerPosition = transform.position.ToFloatArray();
     }
+    public void EquipWeapon(Weapon weapon)
+    {
+        modifiedAttackCooldown *= weapon.speedMultiplier;
+        totalAttackDamage += weapon.damage;
+        attackRange = weapon.attackRange;
+}
 }

@@ -26,5 +26,10 @@ public partial class ButtonInfo : MonoBehaviour
             }
             else this.GetComponent<Button>().interactable = true;
         }
+        if(Type == ItemType.EquipedWeapon)
+        {
+            this.GetComponent<Button>().interactable = false;
+        }
+        else this.GetComponent<Button>().interactable = true;
     }
 }
