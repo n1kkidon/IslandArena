@@ -66,7 +66,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if(CanRun)
+            MovePlayer();
     }
     private void MyInput()
     {
@@ -81,19 +82,22 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
         }
-        if(Input.GetButton("Fire1") && readyToAttack)
+        if(Input.GetButton("Fire1") && readyToAttack && CanHitEnemies)
         {
+            CanRun = false;
             attackSoundEffect.Play();
             animator.SetTrigger("AttackEnemy");
-            readyToAttack = false;
+            readyToAttack = false;          
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
             Invoke(nameof(Attack), delay * 0.3f);       
+            Invoke(nameof(ResetRunLock), delay);       
         }
         ListenForSpecialSkills();
 
     }
+    void ResetRunLock() => CanRun = true;
     private void Attack()
-    {
+    { 
         Invoke(nameof(ResetAttackCd), modifiedAttackCooldown);
 
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);

@@ -43,6 +43,9 @@ public class PlayerHealth : MonoBehaviour, IDataPersistence
 
     public void TakeDamage(float damage)
     {
+        if (!playerMovement.CanTakeDamage) //could also play some block sound, idk
+            return;
+
         animator.SetTrigger("GetHit");
         currentHealth -= damage * playerMovement.takeDamageRatio;
 

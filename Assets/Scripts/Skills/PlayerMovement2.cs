@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Saving;
 using Assets.Scripts.Skills;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     bool canWaterWalk = false;
     bool regen = false;
     bool canSlowDownTime = false;
+    bool canParry = false;
     Coroutine healthRegen;
     public FlashImage flashImage;
 
@@ -23,6 +25,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         DoubleJumpLogic();
         JesusAntiGravityMode();
         SlowDownTimeLogic();
+        ParryLogic();
     }
 
     public void InitializeSpecialSkills()
@@ -30,6 +33,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         canDoubleJump = SkillTree.Instance.skillObjects["doubleJump"].SkillLevel > 0;
         canSlowDownTime = SkillTree.Instance.skillObjects["slowDownTime"].SkillLevel > 0;
         canWaterWalk = SkillTree.Instance.skillObjects["waterWalking"].SkillLevel > 0;
+        canParry = SkillTree.Instance.skillObjects["parry"].SkillLevel > 0;
         regen = SkillTree.Instance.skillObjects["regen"].SkillLevel > 0;
         if (regen)
             healthRegen = StartCoroutine(Regen());
@@ -45,7 +49,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
 
 
-        //parry = SkillTree.Instance.skillObjects["parry"].SkillLevel > 0;  
+         
         //invisibility = SkillTree.Instance.skillObjects["invisibility"];   
         //stun = SkillTree.Instance.skillObjects["stun"];
 
@@ -55,6 +59,35 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         BonusDamageLogic();
         BonusAttackSpeedLogic();
         BonusMovespeedLogic();
+    }
+
+    public bool CanTakeDamage = true;
+    bool CanHitEnemies = true;
+    bool CanRun = true;
+    void ParryLogic()
+    {
+        if (canParry)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                animator.SetBool("Block", true);
+                CanHitEnemies = false;
+                CanTakeDamage = false;
+                CanRun = false;
+            }
+            else if(Input.GetKeyUp(KeyCode.E))
+            {
+                animator.SetBool("Block", false);
+                var delay = animator.GetCurrentAnimatorStateInfo(0).length;
+                Invoke(nameof(ResetCanHitEnemiesAndRun), delay);
+            }
+        }
+    }
+    void ResetCanHitEnemiesAndRun() 
+    { 
+        CanHitEnemies = true;
+        CanTakeDamage = true;
+        CanRun = true;
     }
 
     void SlowDownTimeLogic()
