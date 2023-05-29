@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class PlayerScreenUI : MonoBehaviour
 {
@@ -10,7 +11,22 @@ public class PlayerScreenUI : MonoBehaviour
     public GameObject expText;
     public GameObject goldText;
     public GameObject waveText;
+    public GameObject bossEnemyHealthText;
+    public bool isBossSpawned = false;
 
+    public void UpdateBossEnemyHealth(float health)
+    {
+        Debug.Log("Boss Enemy Health: " + health);
+        if (!isBossSpawned)
+        {
+            bossEnemyHealthText.SetActive(true);
+            bossEnemyHealthText.GetComponent<Text>().text = "Boss Health: " + health.ToString();
+        }
+        else
+        {
+            bossEnemyHealthText.SetActive(false);
+        }
+    }
     public void SetMaxHealth(float health)
     {
         sliderHP.maxValue = health;
