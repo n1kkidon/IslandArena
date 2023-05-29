@@ -24,12 +24,17 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     }
     void Update()
     {
+        if (state == SpawnState.FINISHED)
+            return;
+
         ScreenUI.SetWave(nextWave+1, enemiesAlive, waveCountDown);
         if(state== SpawnState.WAITING)
         {
             if(!EnemyIsAlive())
             {
                 WaveCompleted();
+                if (state == SpawnState.FINISHED)
+                    return;
             }
             else
             {
@@ -57,8 +62,11 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
         waveCountDown = timeBetweenWaves;
         if (nextWave + 1 > Waves.Length - 1)
         {
-            nextWave = 0;
-            Debug.Log("All waves completed, looping");
+            //nextWave = 0;
+            Debug.Log("All waves completed");
+            state = SpawnState.FINISHED;
+            GetComponent<GameManager>().GameComplete();
+            
         }
         else
         {

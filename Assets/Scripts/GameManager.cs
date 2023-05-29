@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverUI;
+    public GameObject gameCompleteUI;
     public GameObject pauseMenuUI;
     public GameObject shopUI;
     public GameObject skillTreeUI;
@@ -21,12 +22,16 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        skillTreeUI.SetActive(true);      
         LoadGame();
+        skillTreeUI.SetActive(false);
     }
     void Awake()
     {
         skillTreeUI.SetActive(true);
         skillTreeUI.SetActive(false);
+        var tempInst = SkillTree.Instance.enabled;
+        Debug.Log($"gameManager enabled skillTree: {tempInst}");
     }
 
     void CloseUI()
@@ -44,7 +49,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameOverUI.activeInHierarchy)
+        if (!gameOverUI.activeInHierarchy && !gameCompleteUI.activeInHierarchy)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -68,7 +73,9 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy || skillTreeUI.activeInHierarchy || shopUI.activeInHierarchy)
+        if(gameOverUI.activeInHierarchy || pauseMenuUI.activeInHierarchy 
+            || skillTreeUI.activeInHierarchy || shopUI.activeInHierarchy 
+            || gameCompleteUI.activeInHierarchy)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -90,6 +97,12 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerMovement>().enabled = false;
         playerCam.GetComponent<ThirdPersonCam>().enabled = false;
         gameOverUI.SetActive(true);
+    }
+    public void GameComplete()
+    {
+        player.GetComponent<PlayerMovement>().enabled = false;
+        playerCam.GetComponent<ThirdPersonCam>().enabled = false;
+        gameCompleteUI.SetActive(true);
     }
     public void Restart() 
     { 
@@ -120,6 +133,9 @@ public class GameManager : MonoBehaviour
     {
         isPaused = false;
         pauseMenuUI.SetActive(false);
+        gameCompleteUI.SetActive(false);
+        player.GetComponent<PlayerMovement>().enabled = true;
+        playerCam.GetComponent<ThirdPersonCam>().enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;

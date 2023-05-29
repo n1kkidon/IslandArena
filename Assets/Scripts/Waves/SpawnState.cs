@@ -1,4 +1,4 @@
 ﻿public partial class WaveSpawner
 {
-    public enum SpawnState { SPAWNING, WAITING, COUNTING};
+    public enum SpawnState { SPAWNING, WAITING, COUNTING, FINISHED};
 }

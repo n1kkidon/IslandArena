@@ -21,5 +21,6 @@ namespace Assets.Scripts.Saving
         public int expToNextLevel;
         public int levelPointsUsed;
         public int levelPointsAvailable;
+        public string SkillTreeDictionaryJson;
     }
 }

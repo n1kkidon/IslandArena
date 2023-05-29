@@ -1,17 +1,8 @@
-﻿using Assets.Scripts.Saving;
-using Assets.Scripts.Skills;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
-public partial class PlayerMovement : MonoBehaviour, IDataPersistence
+public partial class PlayerMovement
 {
     bool canDoubleJump = false;
     bool canWaterWalk = false;
@@ -151,7 +142,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
     void SlowDownTimeLogic()
     {
-        if (canSlowDownTime)
+        if (canSlowDownTime && Time.timeScale != 0f)
         {
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
@@ -191,7 +182,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
             var modFunnyPos = funnyPos;
             modFunnyPos.y -= 0.5f;  //these are like this for doubleJump not to sink you down
             waterGrounded = Physics.Raycast(funnyPos, Vector3.down, 0.7f, waterLayer);
-            if (waterGrounded)
+            if (waterGrounded && !Input.GetKey(KeyCode.LeftControl))
                 rb.useGravity = false;
             else rb.useGravity = true;
         }

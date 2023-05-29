@@ -7,8 +7,9 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Assets.Scripts.Saving;
 
-public class SkillTree : MonoBehaviour
+public class SkillTree : MonoBehaviour, IDataPersistence
 {
 
     public Dictionary<string, SkillObject> skillObjects;
@@ -48,4 +49,16 @@ public class SkillTree : MonoBehaviour
         }
     }
 
+    public void LoadData(GameData data)
+    {
+        skillObjects = JsonConvert.DeserializeObject<Dictionary<string, SkillObject>>(data.SkillTreeDictionaryJson);
+        SkillList = GetComponentsInChildren<Skill>().ToDictionary(x => x.dictionaryKey);
+        UpdateAllSkillUI();
+        UpdatePointsCounter();
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.SkillTreeDictionaryJson = JsonConvert.SerializeObject(skillObjects);
+    }
 }
