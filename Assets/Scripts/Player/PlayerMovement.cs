@@ -16,7 +16,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public float sprintMultiplier = 3f;
     
 
-    Animator animator;
+    public Animator animator;
 
     public float groundDrag;
 
@@ -47,6 +47,9 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public GameObject bowHolder;
     public GameObject equipedWeapon;
     public Weapon currentWeapon;
+    private bool usingBow=false;
+    public GameObject arrowObject;
+    public Transform arrowPoint;
 
     bool readyToAttack;
     void ResetAttackCd() => readyToAttack = true;
@@ -95,7 +98,11 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         {
             CanRun = false;
             attackSoundEffect.Play();
-            animator.SetTrigger("AttackEnemy");
+            if (usingBow)
+            {
+                animator.SetTrigger("AttackEnemyBow");
+            }
+            else animator.SetTrigger("AttackEnemy");
             readyToAttack = false;          
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
             Invoke(nameof(Attack), delay * 0.3f);       
@@ -118,6 +125,15 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
                 gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
             }
         }
+    }
+    public void Shoot()
+    {
+        GameObject arrow= Instantiate(arrowObject, arrowPoint.position, arrowPoint.rotation);
+        arrow.GetComponent<Rigidbody>().AddForce(arrowPoint.up*25f, ForceMode.Impulse);
+    }
+    public float ArrowDamage()
+    {
+        return CritChanceMod(totalAttackDamage);
     }
 
     private void AttackTwoHanded()
@@ -219,6 +235,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         if (weapon.isBow)
         {
             equipedWeapon = Instantiate(weapon.weaponObject, bowHolder.transform);
+            usingBow = true;
         }
         else equipedWeapon = Instantiate(weapon.weaponObject, weaponHolder.transform);
         currentWeapon = weapon;
@@ -235,6 +252,10 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
             totalAttackDamage -= currentWeapon.damage;
             attackRange -= currentWeapon.attackRange;
             currentWeapon.type = ItemType.OwnedWeapon;
+            if (currentWeapon.isBow)
+            {
+                usingBow=false;
+            }
         }
     }
 }

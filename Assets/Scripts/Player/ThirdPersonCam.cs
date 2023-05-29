@@ -11,6 +11,11 @@ public class ThirdPersonCam : MonoBehaviour
     public Rigidbody rb;
 
     public float rotationSpeed;
+    public static ThirdPersonCam instance;
+    private void Awake()
+    {
+        instance = this;
+    }
 
 
     // Start is called before the first frame update
@@ -42,5 +47,9 @@ public class ThirdPersonCam : MonoBehaviour
                 playerObject.forward = Vector3.Slerp(playerObject.forward, inputDirection.normalized, Time.deltaTime * rotationSpeed);
         }
         
+    }
+    public Vector3 ViewDirection()
+    {
+        return player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
     }
 }
