@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class ButtonInfo : MonoBehaviour
@@ -12,7 +13,16 @@ public partial class ButtonInfo : MonoBehaviour
     public GameObject ShopManager;
     private void Start()
     {
-        Price.text = price.ToString();
+        if (item.type == ItemType.EquipedWeapon)
+        {
+            Debug.Log("this works");
+            Price.text = "Equiped";
+        }
+        else if (item.type == ItemType.OwnedWeapon)
+        {
+            Price.text = "Owned";
+        }
+        else Price.text = price.ToString();
         Name.text = item.itemName;
     }
     void Update()

@@ -22,5 +22,7 @@ namespace Assets.Scripts.Saving
         public int levelPointsUsed;
         public int levelPointsAvailable;
         public string SkillTreeDictionaryJson;
+        public int[] itemType=new int[10];
+        public string currentWeapon;
     }
 }

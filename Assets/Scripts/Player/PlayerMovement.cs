@@ -242,20 +242,22 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         modifiedAttackCooldown *= weapon.speedMultiplier;
         totalAttackDamage += weapon.damage;
         attackRange += weapon.attackRange;
+        Debug.Log($"Weapon damage: {weapon.damage}");
     }
     public void UnequipWeapon()
     {
-        Destroy(equipedWeapon);
-        if (currentWeapon!= null)
+        if (currentWeapon != null)
         {
+            Debug.Log("Cringe");
             modifiedAttackCooldown /= currentWeapon.speedMultiplier;
             totalAttackDamage -= currentWeapon.damage;
             attackRange -= currentWeapon.attackRange;
             currentWeapon.type = ItemType.OwnedWeapon;
             if (currentWeapon.isBow)
             {
-                usingBow=false;
+                usingBow = false;
             }
         }
+        Destroy(equipedWeapon);
     }
 }

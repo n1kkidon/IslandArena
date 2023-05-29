@@ -87,5 +87,6 @@ public class PlayerInventory : MonoBehaviour, IDataPersistence
     public void SubtractGold(int amount)
     {
         gold -= amount;
+        ScreenUI.SetGold(gold);
     }
 }

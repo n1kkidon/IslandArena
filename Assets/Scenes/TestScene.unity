@@ -4995,7 +4995,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758872716}
-  m_LocalRotation: {x: 0.20071977, y: 0.000000018845816, z: -0.0000000038613104, w: 0.9796487}
+  m_LocalRotation: {x: 0.20071977, y: -0.000000018845807, z: 0.000000003861309, w: 0.9796487}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6451,6 +6451,7 @@ MonoBehaviour:
   itemName: Steel Sword
   icon: {fileID: 0}
   type: 1
+  id: 0
   damage: 20
   speedMultiplier: 1.05
   attackRange: 1
@@ -9618,6 +9619,7 @@ MonoBehaviour:
   - {fileID: 114277210}
   timeBetweenWaves: 5
   ScreenUI: {fileID: 668580571}
+  bossEnemyPrefab: {fileID: 0}
 --- !u!114 &1563026355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12486,6 +12488,7 @@ MonoBehaviour:
   itemName: Bow
   icon: {fileID: 0}
   type: 1
+  id: 1
   damage: 5
   speedMultiplier: 1
   attackRange: 0

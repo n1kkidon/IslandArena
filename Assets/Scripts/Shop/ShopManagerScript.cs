@@ -8,7 +8,7 @@ public class ShopManagerScript : MonoBehaviour
 {
     public void Buy()
     {
-        GameObject ButtonRef=GameObject.FindGameObjectWithTag("Event").GetComponent<EventSystem>().currentSelectedGameObject;
+        GameObject ButtonRef = GameObject.FindGameObjectWithTag("Event").GetComponent<EventSystem>().currentSelectedGameObject;
         ButtonInfo info = ButtonRef.GetComponent<ButtonInfo>();
         if (info.item.type==ItemType.OwnedWeapon || PlayerInventory.instance.gold >= int.Parse(info.Price.text))
         {
