@@ -22,7 +22,6 @@ public class Skill : MonoBehaviour
             bgImage.color = Color.blue;
             UnlockChildSkills();
         }
-        else bgImage.color = Color.green;
         SkillTree.Instance.playerMovement.InitializeSpecialSkills();
     }
     public void UnlockChildSkills()
@@ -31,6 +30,7 @@ public class Skill : MonoBehaviour
         foreach (var childKey in skillObject.ChildSkillObjects)
         {
             var child = SkillTree.Instance.SkillList[childKey];
+            child.bgImage.color = Color.green;
             child.UpdateUI();
         }
     }
