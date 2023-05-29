@@ -111,11 +111,15 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     {
         Debug.Log("Spawning wave: "+nextWave);
         state = SpawnState.SPAWNING;
-        for (int i = 0; i < _wave.count; i++)
+        for(int i=0; i<_wave.counts.Length; i++)
         {
-            SpawnEnemy(_wave.enemy);
-            yield return new WaitForSeconds(1f / _wave.rate);
+            for (int j = 0; j < _wave.counts[i]; j++)
+            {
+                SpawnEnemy(_wave.enemies[i]);
+                yield return new WaitForSeconds(1f / _wave.rate);
+            }
         }
+
         state = SpawnState.WAITING;
 
         yield break;

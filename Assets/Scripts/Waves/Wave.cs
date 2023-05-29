@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public partial class WaveSpawner
 {
     [System.Serializable]
     public class Wave
     {
-        public Transform enemy;
-        public int count;
+        public Transform[] enemies;
+        public int[] counts;
         public float rate;
     }
 }
