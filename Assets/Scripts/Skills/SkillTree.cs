@@ -44,8 +44,7 @@ public class SkillTree : MonoBehaviour, IDataPersistence
         foreach (var skill in SkillList.Values)
         {
             skill.Initialize();
-            if (skillObjects[skill.dictionaryKey].Root)
-                skill.UpdateUI();
+            
         }
     }
 
