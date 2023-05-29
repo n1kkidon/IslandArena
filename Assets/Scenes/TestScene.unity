@@ -612,7 +612,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109473172}
-  m_LocalRotation: {x: 0.2566679, y: -0.000000029001464, z: 0.000000007701757, w: 0.9664997}
+  m_LocalRotation: {x: 0.25666794, y: 0.0000000033791123, z: -8.973711e-10, w: 0.9664997}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2224,7 +2224,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264583282}
-  m_LocalRotation: {x: 0.23868072, y: -0.000000016709084, z: 0.0000000041068318, w: 0.9710981}
+  m_LocalRotation: {x: 0.23868072, y: 0.000000016709087, z: -0.0000000041068327, w: 0.9710981}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4583,7 +4583,8 @@ MonoBehaviour:
   expText: {fileID: 1818435123}
   goldText: {fileID: 411814608}
   waveText: {fileID: 1376562175}
-  bossEnemyHealthText: {fileID: 229868366}
+  bossEnemyHealthText: {fileID: 0}
+  isBossSpawned: 0
 --- !u!114 &668580572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5076,7 +5077,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 758872716}
-  m_LocalRotation: {x: 0.20071977, y: -0.000000018845807, z: 0.000000003861309, w: 0.9796487}
+  m_LocalRotation: {x: 0.20071977, y: 0.000000018845816, z: -0.0000000038613104, w: 0.9796487}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6537,6 +6538,7 @@ MonoBehaviour:
   itemName: Steel Sword
   icon: {fileID: 0}
   type: 1
+  id: 0
   damage: 20
   speedMultiplier: 1.05
   attackRange: 1
@@ -9986,7 +9988,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1568459963}
-  m_LocalRotation: {x: 0.23868075, y: -0.00000003341817, z: 0.000000008213664, w: 0.9710982}
+  m_LocalRotation: {x: 0.23868075, y: 0.00000003341817, z: -0.000000008213664, w: 0.9710982}
   m_LocalPosition: {x: 469.49, y: 24, z: 440}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -12573,6 +12575,7 @@ MonoBehaviour:
   itemName: Bow
   icon: {fileID: 0}
   type: 1
+  id: 1
   damage: 5
   speedMultiplier: 1
   attackRange: 0
