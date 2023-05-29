@@ -29,6 +29,7 @@ public class ShopManagerScript : MonoBehaviour
             if(info.Type==ItemType.OwnedWeapon)
             {
                 info.Type = ItemType.EquipedWeapon;
+                PlayerMovement.instance.UnequipWeapon();
                 PlayerMovement.instance.EquipWeapon((Weapon)info.item);
                 info.Price.text = "Equiped";
             }
