@@ -14,6 +14,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public float jumpCooldown = 0.7f;
     public float sneakMultiplier = 0.4f;
     public float sprintMultiplier = 3f;
+    
 
     Animator animator;
 
@@ -38,6 +39,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public float baseAttackDamage = 25;
     float totalAttackDamage;
     public float attackRange = 3;
+    public float stunDuration = 1.5f;
+    float stunDamageModifier = 1;
     public Transform attackPoint;
     public LayerMask enemy;
     public Weapon equipedWeapon = null;
@@ -93,7 +96,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
             readyToAttack = false;          
             var delay = animator.GetCurrentAnimatorStateInfo(0).length;
             Invoke(nameof(Attack), delay * 0.3f);       
-            Invoke(nameof(ResetRunLock), delay);       
+            Invoke(nameof(ResetRunLock), delay * 0.7f);       
         }
         ListenForSpecialSkills();
 
@@ -105,10 +108,24 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
 
         var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
         var nextAttack = CritChanceMod(totalAttackDamage);
-        Debug.Log($"attack damage: {nextAttack}");
         foreach (var item in enemiesHit)
         {
-            if (item.gameObject.GetComponent<Enemy>().TakeDamage(totalAttackDamage, out var loot))
+            if (item.gameObject.GetComponent<Enemy>().TakeDamage(nextAttack, out var loot))
+            {
+                gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
+            }
+        }
+    }
+
+    private void AttackTwoHanded()
+    {
+        Invoke(nameof(ResetAttackCd), modifiedAttackCooldown);
+
+        var enemiesHit = Physics.OverlapSphere(attackPoint.position, attackRange, enemy);
+        var nextAttack = CritChanceMod(totalAttackDamage) * stunDamageModifier;
+        foreach (var item in enemiesHit)
+        {
+            if (item.gameObject.GetComponent<Enemy>().TakeDamage(nextAttack, out var loot, stunDuration))
             {
                 gameObject.GetComponent<PlayerInventory>().GetMobDrop(loot);
             }

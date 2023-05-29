@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public partial class PlayerMovement : MonoBehaviour, IDataPersistence
@@ -17,6 +18,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     bool regen = false;
     bool canSlowDownTime = false;
     bool canParry = false;
+    bool canBecomeInvis = false;
+    bool canStun = false;
     Coroutine healthRegen;
     public FlashImage flashImage;
 
@@ -26,6 +29,8 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         JesusAntiGravityMode();
         SlowDownTimeLogic();
         ParryLogic();
+        InvisibilityLogic();
+        StunLogic();
     }
 
     public void InitializeSpecialSkills()
@@ -47,19 +52,73 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
         else Physics.IgnoreLayerCollision(gameObject.layer, waterLayer, true);
 
 
-
-
-         
-        //invisibility = SkillTree.Instance.skillObjects["invisibility"];   
-        //stun = SkillTree.Instance.skillObjects["stun"];
-
+        var stun = SkillTree.Instance.skillObjects["stun"];
+        canStun = stun.SkillLevel > 0;
+        if (canStun)
+        {
+            baseStunCooldown -= stun.SkillLevel - 1;
+            stunDamageModifier = (float)stun.SkillLevel / stun.SkillCap + 1;
+        }
 
         //initializing passive stats here
         TankinessLogic();
         BonusDamageLogic();
         BonusAttackSpeedLogic();
         BonusMovespeedLogic();
+        InvisibilityLogicInit();
     }
+
+    public float baseStunCooldown = 5;
+    bool stunAvailable = true;
+    void ResetStunCD() => stunAvailable = true;
+    void StunLogic()
+    {
+        if (canStun && stunAvailable)
+        {
+            if (Input.GetKeyDown(KeyCode.F) && readyToAttack && CanHitEnemies)
+            {
+                stunAvailable = false;
+                CanRun = false;
+                attackSoundEffect.Play();
+                animator.SetTrigger("Stun");
+                readyToAttack = false;
+                var delay = animator.GetCurrentAnimatorStateInfo(0).length;
+                Invoke(nameof(AttackTwoHanded), delay * 0.3f);
+                Invoke(nameof(ResetRunLock), delay);
+                Invoke(nameof(ResetStunCD), baseStunCooldown);
+            }
+        }
+    }
+
+    void InvisibilityLogicInit()
+    {
+        var invisibility = SkillTree.Instance.skillObjects["invisibility"];
+        canBecomeInvis = invisibility.SkillLevel > 0;
+    }
+
+    void ToggleInvis(bool state)
+    {
+        Debug.Log($"player: {gameObject.layer}, enemy: {enemy}");
+        if(Physics.GetIgnoreLayerCollision(8, gameObject.layer) != state)
+            Physics.IgnoreLayerCollision(8, gameObject.layer, state);
+    }
+    void InvisibilityLogic()
+    {
+        if(canBecomeInvis)
+        {
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                ToggleInvis(true);
+                flashImage.FlashIn(0.1f, 0.15f, Color.blue);
+            }
+            else if(Input.GetKeyUp(KeyCode.R))
+            {
+                ToggleInvis(false);
+                flashImage.FlashOut(0.1f, 0.15f, Color.blue);
+            }
+        }
+    }
+
 
     public bool CanTakeDamage = true;
     bool CanHitEnemies = true;

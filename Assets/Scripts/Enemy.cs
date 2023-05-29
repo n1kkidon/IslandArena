@@ -75,13 +75,16 @@ public class Enemy : MonoBehaviour
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, playerLayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerLayer);
         currHpPercent = currentHealth / maxHealth;
-        IncreaseDamage();
-        if (!playerInSightRange && !playerInAttackRange)
-            Patroling();
-        if (playerInSightRange && !playerInAttackRange)
-            ChasePlayer();
-        else if (playerInAttackRange && playerInSightRange)
-            AttackPlayer();
+        //IncreaseDamage();
+        if (canAttackPlayer)
+        {
+            if (!playerInSightRange && !playerInAttackRange)
+                Patroling();
+            if (playerInSightRange && !playerInAttackRange)
+                ChasePlayer();
+            else if (playerInAttackRange && playerInSightRange)
+                AttackPlayer();
+        }
     }
     bool test = false;
     private void IncreaseDamage()
@@ -139,7 +142,7 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(transform.position);
         else agent.SetDestination(player.position);
         transform.LookAt(player);
-        if(!alreadyAttacked)
+        if(!alreadyAttacked && canAttackPlayer)
         {
             //Need to put attacking logic here 
             animator.SetTrigger("AttackPlayer");
@@ -151,18 +154,20 @@ public class Enemy : MonoBehaviour
             }   
         }
     }
+    bool canAttackPlayer = true;
     void HitPlayer()
     {
         playerHealth.TakeDamage(attackDamage);
         Invoke(nameof(ResetAttack), AttackCooldown);
     }
-    public bool TakeDamage(float damage, out MobDrop loot)
+    public bool TakeDamage(float damage, out MobDrop loot, float stunDuration = 0)
     {
         currentHealth -= damage;
         healthBar.value = CalculateHealth();
         animator.SetTrigger("GotHit");
         PauseAgent();
-        Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length);
+        Debug.Log(stunDuration);
+        Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length + stunDuration);
         if (currentHealth <= 0)
         {
             animator.SetBool("Died", true);
@@ -175,8 +180,19 @@ public class Enemy : MonoBehaviour
         return false;
 
     }
-    void ResumeAgent() => agent.isStopped = false;
-    void PauseAgent() => agent.isStopped = true;
+    void ResumeAgent() 
+    {
+        canAttackPlayer = true;
+        agent.isStopped = false; 
+    }
+
+    void PauseAgent()
+    {
+        canAttackPlayer = false;
+        agent.isStopped = true;
+        animator.SetBool("IsInVisionRange", false);
+        animator.SetBool("IsInAttackRange", false);
+    }
     private void DestroyEnemy()
     {
         Destroy(gameObject);
