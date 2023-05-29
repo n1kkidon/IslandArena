@@ -170,8 +170,6 @@ public class Enemy : MonoBehaviour
         healthBar.value = CalculateHealth();
         animator.SetTrigger("GotHit");
         PauseAgent();
-        Debug.Log(stunDuration);
-        Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length + stunDuration);
         if (currentHealth <= 0)
         {
             amIdead = true;
@@ -181,7 +179,8 @@ public class Enemy : MonoBehaviour
             this.enabled = false;
             return true;
         }
-        itsJoever:
+        Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length + stunDuration);
+    itsJoever:
         loot = null;
         return false;
     }
