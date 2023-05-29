@@ -10,7 +10,6 @@ public partial class ButtonInfo : MonoBehaviour
     public int price;
     public Item item;
     public GameObject ShopManager;
-    public ItemType Type;
     private void Start()
     {
         Price.text = price.ToString();
@@ -18,7 +17,7 @@ public partial class ButtonInfo : MonoBehaviour
     }
     void Update()
     {
-        if(Type==ItemType.HealthPotion)
+        if(item.type==ItemType.HealthPotion)
         {
             if (PlayerHealth.instance.currentHealth == PlayerHealth.instance.maxHealth || PlayerInventory.instance.gold<int.Parse(Price.text))
             {
@@ -26,7 +25,7 @@ public partial class ButtonInfo : MonoBehaviour
             }
             else this.GetComponent<Button>().interactable = true;
         }
-        if(Type == ItemType.EquipedWeapon)
+        if(item.type == ItemType.EquipedWeapon)
         {
             this.GetComponent<Button>().interactable = false;
         }

@@ -44,6 +44,7 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     public Transform attackPoint;
     public LayerMask enemy;
     public GameObject weaponHolder;
+    public GameObject bowHolder;
     public GameObject equipedWeapon;
     public Weapon currentWeapon;
 
@@ -215,7 +216,11 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     }
     public void EquipWeapon(Weapon weapon)
     {
-        equipedWeapon = Instantiate(weapon.weaponObject, weaponHolder.transform);
+        if (weapon.isBow)
+        {
+            equipedWeapon = Instantiate(weapon.weaponObject, bowHolder.transform);
+        }
+        else equipedWeapon = Instantiate(weapon.weaponObject, weaponHolder.transform);
         currentWeapon = weapon;
         modifiedAttackCooldown *= weapon.speedMultiplier;
         totalAttackDamage += weapon.damage;
@@ -223,12 +228,13 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     }
     public void UnequipWeapon()
     {
-        if(currentWeapon!= null)
+        Destroy(equipedWeapon);
+        if (currentWeapon!= null)
         {
             modifiedAttackCooldown /= currentWeapon.speedMultiplier;
             totalAttackDamage -= currentWeapon.damage;
             attackRange -= currentWeapon.attackRange;
+            currentWeapon.type = ItemType.OwnedWeapon;
         }
-        Destroy(equipedWeapon);
     }
 }

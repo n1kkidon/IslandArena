@@ -8,4 +8,5 @@ public class Weapon : Item
     public float speedMultiplier;
     public float attackRange;
     public GameObject weaponObject;
+    public bool isBow;
 }
