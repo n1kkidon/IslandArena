@@ -59,6 +59,12 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
         {
             waveCountDown-=Time.deltaTime;
         }
+
+        // Cheat
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            SpawnBossEnemy();
+        }
     }
 
     void WaveCompleted()
