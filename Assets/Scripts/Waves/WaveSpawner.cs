@@ -138,6 +138,9 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
 
         bossEnemy.GetComponent<Enemy>().maxHealth = 300f;
         bossEnemy.GetComponent<Enemy>().attackDamage = 40;
+
+        float bossEnemyHealth = bossEnemy.GetComponent<Enemy>().maxHealth;
+        ScreenUI.UpdateBossEnemyHealth(bossEnemyHealth);
         enemiesAlive++;
     }
 
