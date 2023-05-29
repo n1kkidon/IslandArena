@@ -43,7 +43,9 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     float stunDamageModifier = 1;
     public Transform attackPoint;
     public LayerMask enemy;
-    public Weapon equipedWeapon = null;
+    public GameObject weaponHolder;
+    public GameObject equipedWeapon;
+    public Weapon currentWeapon;
 
     bool readyToAttack;
     void ResetAttackCd() => readyToAttack = true;
@@ -213,9 +215,20 @@ public partial class PlayerMovement : MonoBehaviour, IDataPersistence
     }
     public void EquipWeapon(Weapon weapon)
     {
-        equipedWeapon = weapon;
+        equipedWeapon = Instantiate(weapon.weaponObject, weaponHolder.transform);
+        currentWeapon = weapon;
         modifiedAttackCooldown *= weapon.speedMultiplier;
         totalAttackDamage += weapon.damage;
-        attackRange = weapon.attackRange;
+        attackRange += weapon.attackRange;
+    }
+    public void UnequipWeapon()
+    {
+        if(currentWeapon!= null)
+        {
+            modifiedAttackCooldown /= currentWeapon.speedMultiplier;
+            totalAttackDamage -= currentWeapon.damage;
+            attackRange -= currentWeapon.attackRange;
+        }
+        Destroy(equipedWeapon);
     }
 }

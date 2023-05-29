@@ -7,4 +7,5 @@ public class Weapon : Item
     public float damage;
     public float speedMultiplier;
     public float attackRange;
+    public GameObject weaponObject;
 }
