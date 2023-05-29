@@ -34,6 +34,11 @@ public class PlayerScreenUI : MonoBehaviour
     }
     public void SetWave(int wave, int enemies, float time)
     {
+        if(time == -1f)
+        {
+            waveText.GetComponent<Text>().text = $"Waves completed\nCongratulations!";
+            return;
+        }
         if (enemies <= 0)
         {
             waveText.GetComponent<Text>().text = $"Current wave: {wave}\nTime until next wave: {time}";

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,12 +16,13 @@ public class Skill : MonoBehaviour
     {
         var skillObject = SkillTree.Instance.skillObjects[dictionaryKey];
         text.text = $"{skillObject.SkillLevel}/{skillObject.SkillCap}\n{skillObject.SkillName}";
-        
-        if (skillObject.SkillLevel >= skillObject.SkillCap) 
+
+        if (skillObject.SkillLevel >= skillObject.SkillCap)
         {
             bgImage.color = Color.blue;
             UnlockChildSkills();
         }
+        else bgImage.color = Color.green;
         SkillTree.Instance.playerMovement.InitializeSpecialSkills();
     }
     public void UnlockChildSkills()
@@ -29,8 +31,6 @@ public class Skill : MonoBehaviour
         foreach (var childKey in skillObject.ChildSkillObjects)
         {
             var child = SkillTree.Instance.SkillList[childKey];
-            if (child.bgImage.color == Color.gray)
-                child.bgImage.color = Color.green;
             child.UpdateUI();
         }
     }
@@ -51,7 +51,11 @@ public class Skill : MonoBehaviour
     {
         var skillObject = SkillTree.Instance.skillObjects[dictionaryKey];
         text.text = $"{skillObject.SkillLevel}/{skillObject.SkillCap}\n{skillObject.SkillName}";
-        bgImage.color = SkillTree.Instance.skillObjects[dictionaryKey].Root ? Color.green : Color.gray;
+        bgImage.color = skillObject.Root ? Color.green : Color.gray;
+        if (skillObject.Root)
+        {
+            UpdateUI();
+        }
     }
     public bool IsBlue() => bgImage.color == Color.blue;
 }

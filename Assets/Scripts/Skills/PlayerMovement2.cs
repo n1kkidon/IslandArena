@@ -47,8 +47,9 @@ public partial class PlayerMovement
         canStun = stun.SkillLevel > 0;
         if (canStun)
         {
-            baseStunCooldown -= stun.SkillLevel - 1;
+            stunCooldown = baseStunCooldown - stun.SkillLevel - 1;
             stunDamageModifier = (float)stun.SkillLevel / stun.SkillCap + 1;
+
         }
 
         //initializing passive stats here
@@ -60,6 +61,7 @@ public partial class PlayerMovement
     }
 
     public float baseStunCooldown = 5;
+    float stunCooldown;
     bool stunAvailable = true;
     void ResetStunCD() => stunAvailable = true;
     void StunLogic()
@@ -74,9 +76,9 @@ public partial class PlayerMovement
                 animator.SetTrigger("Stun");
                 readyToAttack = false;
                 var delay = animator.GetCurrentAnimatorStateInfo(0).length;
-                Invoke(nameof(AttackTwoHanded), delay * 0.3f);
+                Invoke(nameof(AttackTwoHanded), delay*0.5f);
                 Invoke(nameof(ResetRunLock), delay);
-                Invoke(nameof(ResetStunCD), baseStunCooldown);
+                Invoke(nameof(ResetStunCD), stunCooldown);
             }
         }
     }

@@ -34,7 +34,10 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
             {
                 WaveCompleted();
                 if (state == SpawnState.FINISHED)
-                    return;
+                {
+                    ScreenUI.SetWave(1, 1, -1f);
+                    return; 
+                }
             }
             else
             {
@@ -115,6 +118,7 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     {
         state = data.state;
         nextWave = data.currentWave;
+        ScreenUI.SetWave(1, 1, -1f);
     }
 
     public void SaveData(ref GameData data)

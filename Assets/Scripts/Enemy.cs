@@ -160,8 +160,12 @@ public class Enemy : MonoBehaviour
         playerHealth.TakeDamage(attackDamage);
         Invoke(nameof(ResetAttack), AttackCooldown);
     }
+
+    bool amIdead = false;
     public bool TakeDamage(float damage, out MobDrop loot, float stunDuration = 0)
     {
+        if (amIdead)
+            goto itsJoever;
         currentHealth -= damage;
         healthBar.value = CalculateHealth();
         animator.SetTrigger("GotHit");
@@ -170,15 +174,16 @@ public class Enemy : MonoBehaviour
         Invoke(nameof(ResumeAgent), animator.GetCurrentAnimatorStateInfo(0).length + stunDuration);
         if (currentHealth <= 0)
         {
+            amIdead = true;
             animator.SetBool("Died", true);
-            Invoke(nameof(DestroyEnemy), animator.GetCurrentAnimatorStateInfo(0).length * 2);
+            Invoke(nameof(DestroyEnemy), 5f); //animator.GetCurrentAnimatorStateInfo(0).length * 2);
             loot = DropLoot();
             this.enabled = false;
             return true;
         }
+        itsJoever:
         loot = null;
         return false;
-
     }
     void ResumeAgent() 
     {
