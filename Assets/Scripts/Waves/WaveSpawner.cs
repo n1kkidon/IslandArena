@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static WaveSpawner;
 
 public partial class WaveSpawner : MonoBehaviour, IDataPersistence
 {
@@ -17,6 +18,9 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     private float searchCountdown = 1f;
     private SpawnState state = SpawnState.COUNTING;
     public PlayerScreenUI ScreenUI;
+
+    [SerializeField]
+    private Transform bossEnemyPrefab;
 
     void Start()
     {
@@ -61,15 +65,20 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
     {
         Debug.Log("Wave completed");
         DataPersistenceManager.Instance.SaveGame();
-        state=SpawnState.COUNTING;
+        state = SpawnState.COUNTING;
         waveCountDown = timeBetweenWaves;
+
+        if ((nextWave + 1) % 5 == 0)
+        {
+            // Spawn a boss enemy
+            SpawnBossEnemy();
+        }
+
         if (nextWave + 1 > Waves.Length - 1)
         {
-            //nextWave = 0;
             Debug.Log("All waves completed");
             state = SpawnState.FINISHED;
             GetComponent<GameManager>().GameComplete();
-            
         }
         else
         {
@@ -111,6 +120,18 @@ public partial class WaveSpawner : MonoBehaviour, IDataPersistence
         Debug.Log("Spawning enemy: " + _enemy.name);
         Transform _sp = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
         Instantiate(_enemy, _sp.position, Quaternion.identity);
+        enemiesAlive++;
+    }
+
+    void SpawnBossEnemy()
+    {
+        Debug.Log("Spawning boss enemy");
+        Transform _sp = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+        Transform bossEnemy = Instantiate(bossEnemyPrefab, _sp.position, Quaternion.identity);
+        bossEnemy.localScale = new Vector3(3f, 3f, 3f);
+
+        bossEnemy.GetComponent<Enemy>().maxHealth = 300f;
+        bossEnemy.GetComponent<Enemy>().attackDamage = 40;
         enemiesAlive++;
     }
 
