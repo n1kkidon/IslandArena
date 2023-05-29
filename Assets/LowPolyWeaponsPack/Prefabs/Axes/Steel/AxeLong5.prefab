@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8224433024587630736}
   - component: {fileID: 9221398611895948395}
   - component: {fileID: 9125113190135015604}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AxeLong5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,6 +58,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -82,6 +83,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &8224433024587630736
 BoxCollider:
   m_ObjectHideFlags: 0
